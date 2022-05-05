@@ -90,6 +90,30 @@ namespace Begenjov_B.Repository
             return user;
         }
 
+        public User Get(string email)
+        {
+            ArgumentNullException.ThrowIfNull(email);
+
+            var cmd = new SqlCommand("GetUserByEmail", sqlConnection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Email", email);
+
+            sqlConnection.Open();
+            var reader = cmd.ExecuteReader();
+
+            reader.Read();
+            var user = CreateUser(reader);
+
+            sqlConnection.Close();
+
+            if (user.FirstName == null && user.LastName == null)
+            {
+                return null;
+            }
+
+            return user;
+        }
+
         public List<User> GetAllUsers()
         {
             var cmd = sqlConnection.CreateCommand();
