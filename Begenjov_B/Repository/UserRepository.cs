@@ -77,7 +77,6 @@ namespace Begenjov_B.Repository
             sqlConnection.Open();
             var reader = cmd.ExecuteReader();
 
-            reader.Read();
             var user = CreateUser(reader);
 
             sqlConnection.Close();
@@ -101,12 +100,11 @@ namespace Begenjov_B.Repository
             sqlConnection.Open();
             var reader = cmd.ExecuteReader();
 
-            reader.Read();
             var user = CreateUser(reader);
 
             sqlConnection.Close();
 
-            if (user.FirstName == null && user.LastName == null)
+            if (user == null)
             {
                 return null;
             }
@@ -124,7 +122,7 @@ namespace Begenjov_B.Repository
             var reader = cmd.ExecuteReader();
             var userList = new List<User>();
             
-            while (reader.Read())
+            while (reader != null)
             {
                 userList.Add(CreateUser(reader));
             }
@@ -135,14 +133,23 @@ namespace Begenjov_B.Repository
 
         private User CreateUser(SqlDataReader reader)
         {
-            var user = new User();
+            User user = null;
 
-            user.Id = reader.GetGuid(0);
-            user.Email = reader.GetString(1);
-            user.PasswordHash = reader.GetString(2);
-            user.FirstName = reader.GetString(3);
-            user.LastName = reader.GetString(4);
-            user.IsActive = reader.GetBoolean(5);
+            if (reader.Read())
+            {
+                user = new User();
+
+                user.Id = reader.GetGuid(0);
+                user.Email = reader.GetString(1);
+                user.PasswordHash = reader.GetString(2);
+                user.FirstName = reader.GetString(3);
+                user.LastName = reader.GetString(4);
+                user.IsActive = reader.GetBoolean(5);
+            }
+            else
+            {
+                reader = null;
+            }
 
             return user;
         }

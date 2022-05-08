@@ -45,7 +45,6 @@ namespace Begenjov_B.Controllers
                         IsActive = true
                     });
 
-
                     await Authenticate(userModel.Email);
 
                     return RedirectToAction("Index", "Home");
@@ -66,7 +65,8 @@ namespace Begenjov_B.Controllers
         {
             return View();
         }
-
+        
+        [HttpPost]
         public async Task<ActionResult> Login(LoginModel model)
         {
             if (ModelState.IsValid)
@@ -76,12 +76,16 @@ namespace Begenjov_B.Controllers
 
                 if (user != null)
                 {
-                    await Authenticate(model.Email); // аутентификация
-
-                    return RedirectToAction("Index", "Home");
+                    if (user.PasswordHash == PassToHash(model.Password))
+                    {
+                        await Authenticate(model.Email); // аутентификация
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+
+                ModelState.AddModelError("", "Incorrect login and(or) password");
             }
+
             return View(model);
         }
 
@@ -109,8 +113,7 @@ namespace Begenjov_B.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Home");
         }
-
     }
 }
