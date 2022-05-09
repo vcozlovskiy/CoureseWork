@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Begenjov_B", "Begenjov_B\Begenjov_B.csproj", "{2B290C86-6BB7-454E-B6B6-768FD99CB9FF}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Task_9_1", "..\..\..\Desktop\IsSoft\Task_9\Task_9_1\Task_9_1.sqlproj", "{085A0D26-7D39-43C1-A6FC-8E6710CC080C}"
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Data", "..\..\..\Desktop\IsSoft\Task_9\Task_9_1\Data.sqlproj", "{085A0D26-7D39-43C1-A6FC-8E6710CC080C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

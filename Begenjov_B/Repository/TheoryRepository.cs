@@ -5,7 +5,7 @@ using System.Data;
 
 namespace Begenjov_B.Repository
 {
-    public class TheoryRepository : AbstractRepository<Theory>
+    public class TheoryRepository : AbstractRepository<Theory>, IDisposable
     {
         private readonly SqlConnection sqlConnection;
         public TheoryRepository()
@@ -117,7 +117,20 @@ namespace Begenjov_B.Repository
 
         public override void Update(Theory itemUpdeted)
         {
-            throw new NotImplementedException();
+            var cmd = new SqlCommand("UpdateTheory", sqlConnection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Title", itemUpdeted.Title);
+            cmd.Parameters.AddWithValue("@Text", itemUpdeted.Text);
+            cmd.Parameters.AddWithValue("@Data", itemUpdeted.PublesherDate);
+            cmd.Parameters.AddWithValue("@OvnerId", itemUpdeted.Ovner);
+
+            sqlConnection.Open();
+
+            var reader = cmd.ExecuteReader();
+
+            var recExist = reader.VisibleFieldCount > 0;
+
+            sqlConnection.Close();
         }
 
         public bool IsExist(int id)

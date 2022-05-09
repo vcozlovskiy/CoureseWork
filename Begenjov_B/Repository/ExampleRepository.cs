@@ -1,17 +1,15 @@
-﻿using Begenjov_B.Controllers;
-using Begenjov_B.Models;
-using Begenjov_B.Models.History;
-using Begenjov_B.Models.News;
+﻿using Begenjov_B.Models.Example;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using System.Data;
 
 namespace Begenjov_B.Repository
 {
-    public class HistoryRepository : AbstractRepository<HistoryModel>, IDisposable
+    public class ExampleRepository : AbstractRepository<Example>, IDisposable
     {
         private readonly SqlConnection sqlConnection;
-        public HistoryRepository()
+        public ExampleRepository()
         {
             var builder = new ConfigurationBuilder();
 
@@ -24,10 +22,10 @@ namespace Begenjov_B.Repository
             sqlConnection = new SqlConnection(connectionString);
         }
 
-        public override void Add(HistoryModel item)
+        public override void Add(Example item)
         {
             ArgumentNullException.ThrowIfNull(item);
-            var cmd = new SqlCommand("AddHistory", sqlConnection);
+            var cmd = new SqlCommand("AddExample", sqlConnection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@Id", item.Id);
@@ -43,9 +41,9 @@ namespace Begenjov_B.Repository
             sqlConnection.Close();
         }
 
-        public override void Delete(HistoryModel item)
+        public override void Delete(Example item)
         {
-            var cmd = new SqlCommand("DeleteHistory", sqlConnection);
+            var cmd = new SqlCommand("DeleteExample", sqlConnection);
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.AddWithValue("@Id", item.Id);
@@ -57,10 +55,10 @@ namespace Begenjov_B.Repository
             sqlConnection.Close();
         }
 
-        public override HistoryModel Get(int id)
+        public override Example Get(int id)
         {
-            HistoryModel hisotory;
-            var cmd = new SqlCommand("GetHistory", sqlConnection);
+            Example hisotory;
+            var cmd = new SqlCommand("GetExample", sqlConnection);
             using var userRepo = new UserRepository();
 
             cmd.CommandType = CommandType.StoredProcedure;
@@ -73,7 +71,7 @@ namespace Begenjov_B.Repository
 
                 var reader = cmd.ExecuteReader();
                 reader.Read();
-                hisotory = new HistoryModel()
+                hisotory = new Example()
                 {
                     Id = reader.GetInt32(0),
                     Title = reader.GetString(1),
@@ -92,18 +90,18 @@ namespace Begenjov_B.Repository
             return hisotory;
         }
 
-        public List<HistoryModel> GetHistories()
+        public List<Example> GetTheories()
         {
-            var cmd = new SqlCommand("GetHistories", sqlConnection);
+            var cmd = new SqlCommand("GetExamples", sqlConnection);
             using var userRepo = new UserRepository();
-            var list = new List<HistoryModel>();
+            var list = new List<Example>();
 
             sqlConnection.Open();
             var reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
-                list.Add(new HistoryModel()
+                list.Add(new Example()
                 {
                     Id = reader.GetInt32(0),
                     Title = reader.GetString(1),
@@ -118,9 +116,9 @@ namespace Begenjov_B.Repository
             return list;
         }
 
-        public override void Update(HistoryModel itemUpdeted)
+        public override void Update(Example itemUpdeted)
         {
-            var cmd = new SqlCommand("UpdateHistory", sqlConnection);
+            var cmd = new SqlCommand("UpdateExample",sqlConnection);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@Title", itemUpdeted.Title);
             cmd.Parameters.AddWithValue("@Text", itemUpdeted.Text);
@@ -138,7 +136,7 @@ namespace Begenjov_B.Repository
 
         public bool IsExist(int id)
         {
-            var cmd = new SqlCommand("HistoryExist", sqlConnection);
+            var cmd = new SqlCommand("ExampleExist", sqlConnection);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@id", id);
 
@@ -155,7 +153,7 @@ namespace Begenjov_B.Repository
 
         public int GetMaxId()
         {
-            var cmd = new SqlCommand("Select COALESCE(MAX(Histories.Id), 0) From Histories", sqlConnection);
+            var cmd = new SqlCommand("Select COALESCE(MAX(Example.Id), 0) From Example", sqlConnection);
 
             sqlConnection.Open();
 

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Begenjov_B.Models.Source.Source>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+@foreach (var item in Model)
+{
+    <div class="card mx-auto bg-light text-dark mb-3">
+        <div class="col-lg-4 col-sm-12 rounded col-12 box-1 aos-init aos-animate" data-aos="fade-right" data-aos-delay="300">
+            <figure class="figure">
+                <figcaption class="figure-caption">
+                    <h2><a class="card-title">@item.Title</a></h2>
+                    <p class="card-text">@item.Text</p>
+                    <p class="card-text"><small class="text-muted">@item.Ovner.FirstName @item.Ovner.LastName</small></p>
+                    <p class="card-text"><small class="text-muted">@item.PublesherDate.Date</small></p>
+                    @if (User.Identity.Name == item.Ovner.Email || User.IsInRole("Admin"))
+                    {
+                        <a>@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |</a>
+                        <a>@Html.ActionLink("Details", "Details", new { id = item.Id }) |</a>
+                        <a>@Html.ActionLink("Delete", "Delete", new { id = item.Id })</a>
+                    }
+                </figcaption>
+            </figure>
+        </div>
+    </div>
+}
